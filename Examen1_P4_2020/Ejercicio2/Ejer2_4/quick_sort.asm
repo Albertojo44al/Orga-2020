@@ -5,9 +5,11 @@
 ;s1 -> b
 ;$t0 -> t
 swap:
+    addi    $sp, $sp , -4
     move 	$t0, $s0
     move    $s0, $s1
     move    $s1, $t0
+    addi    $sp, $sp, 4
     jr      $ra
 
 ;a0 -> arr
@@ -17,8 +19,10 @@ swap:
 ;$t1 -> i
 ;$t2 -> j
 partition:
-    addi    $sp, $sp , -4
+    addi    $sp, $sp , -12
     sw      $ra, 0($sp)
+    sw      $s0, 4($sp)
+    sw      $s1, 8($sp)
     sll     $t3, $a2, 2
     add     $t3, $t3, $a0 
     lw      $t0, 0($t3)          ;pivot = arr[high]
@@ -58,7 +62,9 @@ end_par_loop:
 
     addi    $v0, $t1, 1
     lw      $ra, 0($sp)
-    addi    $sp, $sp, 4
+    lw      $s0, 4($sp)
+    lw      $s0, 8($sp)
+    addi    $sp, $sp, 12
     jr      $ra     
 
 
@@ -67,10 +73,11 @@ end_par_loop:
 ;high -> a2
 ; pi -> $t0
 quickSort:
-    addi    $sp, $sp , -12
+    addi    $sp, $sp , -8
     sw      $ra, 0($sp)
-    sw      $a1, 4($sp)
-    sw      $a2, 8($sp)
+    sw      $a0, 4($sp)
+    sw      $a1, 8($sp)
+    sw      $a2, 12($sp)
     slt     $t1, $a1, $a2
     beq     $t1, $zero, end_if
     jal     partition
@@ -83,7 +90,8 @@ quickSort:
     jal     quickSort
 end_if:
     lw      $ra, 0($sp)
-    lw      $a1, 4($sp)
-    lw      $a2, 8($sp)
-    addi    $sp, $sp , 12
+    lw      $a0, 4($sp)
+    lw      $a1, 8($sp)
+    lw      $a2, 12($sp)
+    addi    $sp, $sp , 16
     jr      $ra
