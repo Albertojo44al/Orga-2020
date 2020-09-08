@@ -1,0 +1,1 @@
+/usr/local/bin/verilator_bin;--compiler;gcc;--prefix;VMips32SoC;--Mdir;/home/alberto/Escritorio/PruebaI_P4_2020/build/CMakeFiles/test_MIPS32SOC.dir/VMips32SoC.dir;--make;cmake;--top-module;Mips32SoC;--cc;-Wno-fatal;-Os;-DNO_INIT_MEM;/home/alberto/Escritorio/PruebaI_P4_2020/build/Mips32SoC.v

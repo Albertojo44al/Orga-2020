@@ -1,0 +1,3 @@
+/home/alberto/Escritorio/PruebaI_P4_2020/build/CMakeFiles/rebuild_cache.dir
+/home/alberto/Escritorio/PruebaI_P4_2020/build/CMakeFiles/test_MIPS32SOC.dir
+/home/alberto/Escritorio/PruebaI_P4_2020/build/CMakeFiles/edit_cache.dir
