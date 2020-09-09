@@ -1,0 +1,3 @@
+/home/alberto/Escritorio/proyectoOrga/syscall-plugin-template/build/CMakeFiles/rebuild_cache.dir
+/home/alberto/Escritorio/proyectoOrga/syscall-plugin-template/build/CMakeFiles/sc-plugin.dir
+/home/alberto/Escritorio/proyectoOrga/syscall-plugin-template/build/CMakeFiles/edit_cache.dir
