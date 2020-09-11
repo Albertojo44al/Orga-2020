@@ -1,12 +1,19 @@
 .global print_str
 .global print_int
 .global print_char
+.global read_char
 .global read_int
 .global print_char_position
 .global clear
 .global setBackgroundColor
 .global setColor
 .global resetColor
+.global delay
+.global printBall
+.global cursorHider
+.global getch
+.global locate
+.global paddle
 
 start:
     jal main
@@ -23,6 +30,11 @@ print_int:
 
 print_char:
     li $v0, 11
+    syscall
+    jr $ra
+
+read_char:
+    li $v0, 12
     syscall
     jr $ra
     
@@ -53,5 +65,35 @@ setColor:
 
 resetColor:
     li $v0, 24
+    syscall
+    jr $ra
+
+delay:
+    li $v0, 25
+    syscall
+    jr $ra
+
+printBall:
+    li $v0, 26
+    syscall
+    jr $ra
+
+cursorHider:
+    li $v0, 27
+    syscall
+    jr $ra
+
+getch:
+    li $v0, 28
+    syscall
+    jr $ra
+
+locate:
+    li $v0, 29
+    syscall
+    jr $ra
+
+paddle:
+    li $v0, 30
     syscall
     jr $ra
