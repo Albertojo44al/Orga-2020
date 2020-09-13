@@ -14,6 +14,9 @@
 .global getch
 .global locate
 .global paddle
+.global random
+.global blocks
+.global EraseBlock
 
 start:
     jal main
@@ -95,5 +98,20 @@ locate:
 
 paddle:
     li $v0, 30
+    syscall
+    jr $ra
+
+random:
+    li $v0, 31
+    syscall
+    jr $ra
+
+blocks:
+    li $v0, 32
+    syscall
+    jr $ra
+
+EraseBlock:
+    li $v0, 33
     syscall
     jr $ra
