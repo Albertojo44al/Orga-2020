@@ -282,7 +282,7 @@ draw_ball:
     addi    $t1, $t3, 10                    ;large paddle  
     bne     $t0, $a3, go    
 verify_paddle:
-    beq     $a2, $t3, change_direction_y
+    beq     $a2, $t3, change_direction_y_paddle
     beq     $t3, $t1, go
     addi    $t3, $t3, 1
     j		verify_paddle			
@@ -295,6 +295,10 @@ change_direction_y:
     mflo	$t5		
     beq     $a2, $t0, change_direction_x
     beq     $a2, $t1, change_direction_x
+    j		go  
+change_direction_y_paddle:
+    mult	$t5, $t6			
+    mflo	$t5	
     j		go  
 lose: 
     addi    $s4, $s4, -1
