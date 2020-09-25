@@ -4,11 +4,48 @@
   lives: .byte "Lives:", 0
   over: .byte "GAME OVER!", 0
   points: .byte "Points:", 0
+  level1: .byte "Level 1",0
+  level2: .byte "Level 2",0
 
   .text
 main:    
     jal		clear
 
+    addi    $sp, $sp, -60
+    li      $t0, 1
+    sw      $t0, 0($sp)	
+    sw      $t0, 4($sp)
+    sw      $t0, 8($sp)
+    sw      $t0, 12($sp)
+    sw      $t0, 16($sp)
+    sw      $t0, 20($sp)
+    sw      $t0, 24($sp)
+    sw      $t0, 28($sp)
+    sw      $t0, 32($sp)
+    sw      $t0, 36($sp)
+    sw      $t0, 40($sp)
+    sw      $t0, 44($sp)
+    sw      $t0, 48($sp)
+    sw      $t0, 52($sp)
+    sw      $t0, 56($sp)
+    li      $a0, 55
+    li      $a1, 10
+    jal     locate
+    li      $a0, level1
+    jal     print_str
+    move    $a0, $sp
+    
+    li      $s0, 20                    ;paddle position
+    li      $s1, 35
+    jal     general_cicle
+    addi    $sp, $sp, 60
+    beq     $s4,$zero, game_over 
+
+    li      $a0, 55
+    li      $a1, 10
+    jal     locate
+    li      $a0, level2
+    jal     print_str 
     addi    $sp, $sp, -80
     li      $t0, 1
     sw      $t0, 0($sp)	
@@ -31,20 +68,21 @@ main:
     sw      $t0, 68($sp)
     sw      $t0, 72($sp)
     sw      $t0, 76($sp)
-
-    move    $a0, $sp
-    
-    
     li      $s0, 20                    ;paddle position
     li      $s1, 35
-    jal     general_cicle
+    move    $a0, $sp
+    jal     general_cicle_2
+    addi    $sp, $sp, 80
+
+game_over:
     li      $a0, 23
     li      $a1, 25
     jal     locate
     li      $a0, over
-    jal     print_str
+    jal     print_str 
+    
     li      $a0, 0
-    li      $a1, 45
+    li      $a1, 50
     jal     locate
     li      $v0, 10
     syscall
@@ -90,7 +128,6 @@ draw_level1:
     sw      $a0, 8($sp)
     li      $t0, 0                              ;iterator
     li      $t1, 0                              ;init
-    li      $t3, 20                             ;fin
 verify_level1:
     beq     $t1, $t3, end_draw_level1
     sll     $t7, $t0, 2
@@ -125,11 +162,11 @@ end_draw_level1:
     addi    $sp, $sp, 12
     jr      $ra
 
+
 level1_done:
     addi    $sp, $sp, -8
     sw      $ra, 0($sp)
     sw      $a0, 4($sp)
-    li      $t0, 20
     li      $t1, 0
     li      $t3, 0              ;iterator
 cicle:
@@ -144,7 +181,7 @@ cicle:
 level1_complete:
     li		$t1, 100		
     mult    $s4, $t1
-    li      $s4, 0
+    li      $s4, 4
     mflo    $t1
     add     $s3, $s3, $t1  
     addi    $s3, $s3, 200
@@ -188,25 +225,41 @@ end_block_crash:
 
     
 draw_paddle:
-    addi    $sp, $sp, -12
+    addi    $sp, $sp, -16
     sw      $ra, 0($sp)
     sw      $a0, 4($sp)
     sw      $s3, 8($sp)
-    li      $a0, 2
+    sw      $v1, 12($sp)
     li      $t0, 6                  ;left x
     li      $t1, 49                 ;right x
     li      $t3, 1                  ;right
-    li      $t4, -1                 ;left
-    jal     setColor
+    li      $t4, -1                 ;left   
+    move    $a0, $s0
     jal     getch
+    li      $a1, 35
+    slt     $t7 ,$a0, $s0
+    beq     $t7, $zero, move_left
+move_right: 
+    li      $v1, 32
+    jal     print_char_position
+    j		call_paddle
+move_left:
+    li      $v1, 32
+    addi    $a0, $a0, 9
+    jal     print_char_position
+    j		call_paddle
+call_paddle:
+    li      $a0, 7
+    jal     setColor
+    jal     setBackgroundColor
     li      $s3, 35
     jal     paddle 
-end_paddle:
     jal     resetColor
     lw      $ra, 0($sp)	
     lw      $a0, 4($sp)
-    lw		$s3, 8($sp)		 
-    addi    $sp, $sp, 12
+    lw		$s3, 8($sp)	
+    lw      $v1, 12($sp)	 
+    addi    $sp, $sp, 16
     jr      $ra
 
 
@@ -265,14 +318,18 @@ general_cicle:
     li      $a3, 32
     li      $t2, 1              ;x++ or x--
     li      $t5, -1             ;y++ or y--	
-    li      $s4, 5	
+    li      $s4, 3	
     li		$s3, 0			 
     jal     draw_frames
 cicle_:  
+    li      $s6, 4
+    beq     $s4,$s6, end_cicle_
     beq     $s4,$zero, end_cicle_
     li      $s6, 14
     li      $s7, 6
+    li      $t0, 15
     jal     level1_done
+    li      $t3, 15
     jal     draw_level1
     jal     show_ball_position
     jal     draw_paddle			
@@ -280,9 +337,47 @@ cicle_:
     jal     delay
     j		cicle_
 end_cicle_:
+    jal     show_ball_position
+    move    $t0,$s3
+    li      $s3, 32
+    jal     paddle
+    li      $v1, 32
+    jal     printBall
+    move    $s3, $t0
     lw      $ra, 0($sp)
     addi    $sp, $sp, 4
     jr      $ra
+
+general_cicle_2:
+    addi    $sp, $sp, -4
+    sw      $ra, 0($sp)
+    li      $a2, 28
+    li      $a3, 32
+    li      $t2, 1              ;x++ or x--
+    li      $t5, -1             ;y++ or y--	
+    li      $s4, 3		 
+    jal     draw_frames
+cicle_2:  
+    li      $s6, 4
+    beq     $s4,$s6, end_cicle_2
+    beq     $s4,$zero, end_cicle_2
+    li      $s6, 14
+    li      $s7, 6
+    li      $t0, 20
+    jal     level1_done
+    li      $t3, 20
+    jal     draw_level1
+    jal     show_ball_position
+    jal     draw_paddle			
+    jal     draw_ball
+    jal     delay
+    j		cicle_2
+end_cicle_2:
+    jal     show_ball_position
+    lw      $ra, 0($sp)
+    addi    $sp, $sp, 4
+    jr      $ra
+
 
 draw_frames:
     addi    $sp, $sp, -8
@@ -336,13 +431,12 @@ show_ball_position:
     move    $a0, $s3
     jal     print_int
 
-    li      $a0, 55
-    li      $a1, 40
+    li      $a0, 0
+    li      $a1, 45
     li      $v1, 88
     jal     print_char_position
     #show $a2
-    li      $a0, 65
-    li      $a1, 40
+    li      $a0, 15
     li      $v1, 89
     jal     print_char_position
     #show $a3

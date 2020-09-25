@@ -60,13 +60,9 @@ extern "C" ErrorCode handleSyscall(uint32_t *regs, void *mem, MemoryMap *mem_map
                 char k = getch();
                 if(k == 'a' && regs[Register::t0] != regs[Register::s0]){
                     regs[Register::s0] -=1;
-                    rlutil::locate(regs[Register::s0]+10,regs[Register::s1]);
-                    std::cout << " ";
                 }
                 if(k == 'd'&& regs[Register::t1] != regs[Register::s0]+9){
                     regs[Register::s0] += 1;  
-                    rlutil::locate(regs[Register::s0]-1,regs[Register::s1]);
-                    std::cout << " ";
                 }
             }
             return ErrorCode::Ok;
