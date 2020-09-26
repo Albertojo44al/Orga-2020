@@ -122,20 +122,25 @@ end_h_cicle:
 
 
 draw_level1:
-    addi    $sp, $sp, -12
+    addi    $sp, $sp, -16
     sw      $ra, 0($sp)
     sw      $s6, 4($sp)
     sw      $a0, 8($sp)
+    sw      $a1, 12($sp)
+    move    $a1,$a0
     li      $t0, 0                              ;iterator
     li      $t1, 0                              ;init
 verify_level1:
     beq     $t1, $t3, end_draw_level1
     sll     $t7, $t0, 2
-    add     $t7, $a0, $t7
+    add     $t7, $a1, $t7
     lw      $t4, 0($t7)
     beq     $t4, $zero, next_block
-    srl     $s5, $t1, 2 
-    addi    $s5, $s5, 2
+    srl     $a0, $t1, 2 
+    addi    $a0, $a0, 2
+
+    jal     setBackgroundColor
+    jal     setColor
     jal     blocks
     jal     resetColor
     jal     block_crash
@@ -159,7 +164,8 @@ next_row:
 end_draw_level1:
     lw      $ra, 0($sp)
     lw      $a0, 8($sp)
-    addi    $sp, $sp, 12
+    lw      $a1, 12($sp)
+    addi    $sp, $sp, 16
     jr      $ra
 
 
@@ -353,7 +359,7 @@ end_cicle_:
     jr      $ra
 
 general_cicle_2:
-    addi    $sp, $sp, -4
+    addi    $sp, $sp, -8
     sw      $ra, 0($sp)
     li      $a2, 28
     li      $a3, 32
@@ -368,6 +374,7 @@ cicle_2:
     li      $s6, 14
     li      $s7, 6
     li      $t0, 20
+    sw      $s4, 4($sp)
     jal     level1_done
     li      $t3, 20
     jal     draw_level1
@@ -377,9 +384,10 @@ cicle_2:
     jal     delay
     j		cicle_2
 end_cicle_2:
+    lw      $s4, 4($sp)
     jal     show_ball_position
     lw      $ra, 0($sp)
-    addi    $sp, $sp, 4
+    addi    $sp, $sp, 8
     jr      $ra
 
 
@@ -435,12 +443,12 @@ show_ball_position:
     move    $a0, $s3
     jal     print_int
 
-    li      $a0, 0
+    li      $a0, 200
     li      $a1, 45
     li      $v1, 88
     jal     print_char_position
     #show $a2
-    li      $a0, 15
+    li      $a0, 210
     li      $v1, 89
     jal     print_char_position
     #show $a3

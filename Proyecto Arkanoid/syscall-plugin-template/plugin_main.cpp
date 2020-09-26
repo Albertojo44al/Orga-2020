@@ -86,8 +86,6 @@ extern "C" ErrorCode handleSyscall(uint32_t *regs, void *mem, MemoryMap *mem_map
         }
         case 32: //blocks
         {
-            rlutil::setColor(regs[Register::s5]);
-            rlutil::setBackgroundColor(regs[Register::s5]);
             rlutil::locate(regs[Register::s6],regs[Register::s7]);
             std::cout<< "####";
             return ErrorCode::Ok;
